@@ -34,13 +34,19 @@ public class ElevatorService {
         System.out.println("Appending down requests to floor " + request.getDestFloor());
     }
 
-    public void run() {
-        System.out.println("Running simulation");
-        while(!elevator.getUpRequests().isEmpty()  || !elevator.getDownRequests().isEmpty()) {
-            processRequests();
+    public void run() throws InterruptedException {
+        while(true) {
+            if(elevator.getDownRequests().isEmpty() && elevator.getUpRequests().isEmpty())
+                Thread.sleep(2000);
+
+            while(!elevator.getUpRequests().isEmpty()  || !elevator.getDownRequests().isEmpty()) {
+                System.out.println("Running simulation");
+                processRequests();
+                System.out.println("Finished simulation");
+            }
+
+            elevator.setDirection(IDLE);
         }
-        System.out.println("Finished simulation");
-        elevator.setDirection(IDLE);
     }
 
     public void processRequests() {
